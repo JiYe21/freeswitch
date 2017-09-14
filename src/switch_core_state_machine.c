@@ -527,7 +527,7 @@ static void check_presence(switch_core_session_t *session)
 }
 
 
-
+//会话状态机
 SWITCH_DECLARE(void) switch_core_session_run(switch_core_session_t *session)
 {
 	switch_channel_state_t state = CS_NEW, midstate = CS_DESTROY, endstate;
@@ -584,6 +584,7 @@ SWITCH_DECLARE(void) switch_core_session_run(switch_core_session_t *session)
 			switch_channel_set_running_state(session->channel, state);
 			switch_channel_clear_flag(session->channel, CF_TRANSFER);
 			switch_channel_clear_flag(session->channel, CF_REDIRECT);
+			//处理session
 			switch_ivr_parse_all_messages(session);
 
 			if (session->endpoint_interface->io_routines->state_run) {

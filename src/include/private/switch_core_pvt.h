@@ -252,7 +252,7 @@ struct switch_runtime {
 	switch_time_t initiated;
 	switch_time_t reference;
 	int64_t offset;
-	switch_event_t *global_vars;
+	switch_event_t *global_vars;//运行时全局变量 (根目录)
 	switch_hash_t *mime_types;
 	switch_hash_t *mime_type_exts;
 	switch_hash_t *ptimes;
@@ -318,7 +318,7 @@ extern struct switch_runtime runtime;
 
 struct switch_session_manager {
 	switch_memory_pool_t *memory_pool;
-	switch_hash_t *session_table;
+	switch_hash_t *session_table;//会话hash表
 	uint32_t session_count;
 	uint32_t session_limit;
 	switch_size_t session_id;

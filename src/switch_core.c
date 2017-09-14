@@ -57,9 +57,9 @@
 #ifdef SOLARIS_PRIVILEGES
 #include <priv.h>
 #endif
-
+//全局根目录
 SWITCH_DECLARE_DATA switch_directories SWITCH_GLOBAL_dirs = { 0 };
-SWITCH_DECLARE_DATA switch_filenames SWITCH_GLOBAL_filenames = { 0 };
+SWITCH_DECLARE_DATA switch_filenames SWITCH_GLOBAL_filenames = { 0 }; //freeswitch.xml
 
 /* The main runtime obj we keep this hidden for ourselves */
 struct switch_runtime runtime = { 0 };
@@ -640,7 +640,7 @@ SWITCH_DECLARE(void) switch_core_set_globals(void)
 	free(tmp);
 
 #else
-	char base_dir[1024] = SWITCH_PREFIX_DIR;
+	char base_dir[1024] = SWITCH_PREFIX_DIR; //执行configure时prefix 执行目录 
 #endif
 
 	/* Order of precedence for, eg, rundir:
@@ -864,7 +864,7 @@ SWITCH_DECLARE(void) switch_core_set_globals(void)
 #endif
 #endif
 	}
-
+//初始freeswitch.xml路径
 	if (!SWITCH_GLOBAL_filenames.conf_name && (SWITCH_GLOBAL_filenames.conf_name = (char *) malloc(BUFSIZE))) {
 		switch_snprintf(SWITCH_GLOBAL_filenames.conf_name, BUFSIZE, "%s", "freeswitch.xml");
 	}
@@ -1879,7 +1879,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_init(switch_core_flag_t flags, switc
 		return SWITCH_STATUS_MEMERR;
 	}
 	switch_assert(runtime.memory_pool != NULL);
-
+//设置目录读写权限
 	switch_dir_make_recursive(SWITCH_GLOBAL_dirs.base_dir, SWITCH_DEFAULT_DIR_PERMS, runtime.memory_pool);
 	switch_dir_make_recursive(SWITCH_GLOBAL_dirs.mod_dir, SWITCH_DEFAULT_DIR_PERMS, runtime.memory_pool);
 	switch_dir_make_recursive(SWITCH_GLOBAL_dirs.conf_dir, SWITCH_DEFAULT_DIR_PERMS, runtime.memory_pool);
@@ -1905,7 +1905,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_init(switch_core_flag_t flags, switc
 
 	switch_thread_rwlock_create(&runtime.global_var_rwlock, runtime.memory_pool);
 	switch_core_set_globals();
-	switch_core_session_init(runtime.memory_pool);
+	switch_core_session_init(runtime.memory_pool);//初始化会话管理结构
 	switch_event_create_plain(&runtime.global_vars, SWITCH_EVENT_CHANNEL_DATA);
 	switch_core_hash_init_case(&runtime.mime_types, SWITCH_FALSE);
 	switch_core_hash_init_case(&runtime.mime_type_exts, SWITCH_FALSE);
@@ -1921,8 +1921,8 @@ SWITCH_DECLARE(switch_status_t) switch_core_init(switch_core_flag_t flags, switc
 	}
 
 	SSL_library_init();
-	switch_ssl_init_ssl_locks();
-	switch_curl_init();
+	switch_ssl_init_ssl_locks(); //ssl加密传输
+	switch_curl_init(); //http请求
 
 	switch_core_set_variable("hostname", runtime.hostname);
 	switch_find_local_ip(guess_ip, sizeof(guess_ip), &mask, AF_INET);
@@ -1959,7 +1959,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_init(switch_core_flag_t flags, switc
 	switch_console_init(runtime.memory_pool);
 	switch_event_init(runtime.memory_pool);
 	switch_channel_global_init(runtime.memory_pool);
-
+//初始化freeswitch.xml配置文件
 	if (switch_xml_init(runtime.memory_pool, err) != SWITCH_STATUS_SUCCESS) {
 		apr_terminate();
 		return SWITCH_STATUS_MEMERR;
@@ -2386,7 +2386,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_init_and_modload(switch_core_flag_t 
 	const char *use = NULL;
 #include "cc.h"
 
-
+//初始化
 	if (switch_core_init(flags, console, err) != SWITCH_STATUS_SUCCESS) {
 		return SWITCH_STATUS_GENERR;
 	}
@@ -2406,6 +2406,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_init_and_modload(switch_core_flag_t 
 
 	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_CONSOLE, "Bringing up environment.\n");
 	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_CONSOLE, "Loading Modules.\n");
+	//加载模块
 	if (switch_loadable_module_init(SWITCH_TRUE) != SWITCH_STATUS_SUCCESS) {
 		*err = "Cannot load modules";
 		switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_CONSOLE, "Error: %s\n", *err);

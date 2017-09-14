@@ -117,7 +117,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_session_set_codec_slin(switch_core_s
 	return SWITCH_STATUS_FALSE;
 }
 
-
+//查找session
 SWITCH_DECLARE(switch_core_session_t *) switch_core_session_perform_locate(const char *uuid_str, const char *file, const char *func, int line)
 {
 	switch_core_session_t *session = NULL;
@@ -1693,7 +1693,7 @@ static void *SWITCH_THREAD_FUNC switch_core_session_thread(switch_thread_t *thre
 	session->thread = thread;
 	session->thread_id = switch_thread_self();
 
-	switch_core_session_run(session);
+	switch_core_session_run(session);//会话状态机
 	switch_core_media_bug_remove_all(session);
 
 	if (session->soft_lock) {
@@ -1897,7 +1897,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_session_thread_pool_launch(switch_co
 	return status;
 }
 
-
+//处理session线程
 SWITCH_DECLARE(switch_status_t) switch_core_session_thread_launch(switch_core_session_t *session)
 {
 	switch_status_t status = SWITCH_STATUS_FALSE;
@@ -2294,7 +2294,7 @@ SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_xml(switch_e
 }
 
 
-
+//创建session 和channel
 SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_uuid(switch_endpoint_interface_t
 																		 *endpoint_interface,
 																		 switch_call_direction_t direction,
@@ -2365,7 +2365,7 @@ SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_uuid(switch_
 	session->pool = usepool;
 
 	switch_core_memory_pool_set_data(session->pool, "__session", session);
-
+//创建channle 初始化
 	if (switch_channel_alloc(&session->channel, direction, session->pool) != SWITCH_STATUS_SUCCESS) {
 		abort();
 	}
@@ -2385,7 +2385,7 @@ SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_uuid(switch_
 		switch_uuid_get(&uuid);
 		switch_uuid_format(session->uuid_str, &uuid);
 	}
-
+//设置通道变量
 	switch_channel_set_variable(session->channel, "uuid", session->uuid_str);
 	switch_channel_set_variable(session->channel, "call_uuid", session->uuid_str);
 
@@ -2419,7 +2419,7 @@ SWITCH_DECLARE(switch_core_session_t *) switch_core_session_request_uuid(switch_
 	switch_queue_create(&session->private_event_queue_pri, SWITCH_EVENT_QUEUE_LEN, session->pool);
 
 	switch_mutex_lock(runtime.session_hash_mutex);
-	switch_core_hash_insert(session_manager.session_table, session->uuid_str, session);
+	switch_core_hash_insert(session_manager.session_table, session->uuid_str, session);//存入session
 	session->id = session_manager.session_id++;
 	session_manager.session_count++;
 

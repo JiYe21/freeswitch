@@ -168,7 +168,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_session_read_frame(switch_core_sessi
 		status = SWITCH_STATUS_BREAK;
 		goto even_more_done;
 	}
-
+//从底层驱动读取数据 并进行编解码
 	if (session->endpoint_interface->io_routines->read_frame) {
 		switch_mutex_unlock(session->read_codec->mutex);
 		switch_mutex_unlock(session->codec_read_mutex);
@@ -495,6 +495,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_session_read_frame(switch_core_sessi
 
 					codec->cur_frame = read_frame;
 					session->read_codec->cur_frame = read_frame;
+					//解码
 					status = switch_core_codec_decode(codec,
 													  session->read_codec,
 													  read_frame->data,

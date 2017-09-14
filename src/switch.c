@@ -1138,7 +1138,7 @@ int main(int argc, char *argv[])
 		exit(EXIT_SUCCESS);
 	}
 #endif
-
+//初始化全局目录
 	switch_core_set_globals();
 
 	pid = getpid();

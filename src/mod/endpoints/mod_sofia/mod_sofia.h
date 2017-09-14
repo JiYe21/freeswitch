@@ -658,7 +658,7 @@ struct sofia_profile {
 	sofia_cid_type_t cid_type;
 	switch_core_media_dtmf_t dtmf_type;
 	int auto_restart;
-	switch_port_t sip_port;
+	switch_port_t sip_port;//¼àÌý¶Ë¿Ú
 	switch_port_t extsipport;
 	switch_port_t tls_sip_port;
 	char *tls_ciphers;
@@ -688,7 +688,7 @@ struct sofia_profile {
 	switch_mutex_t *gateway_mutex;
 	sofia_gateway_t *gateways;
 	//su_home_t *home;
-	switch_hash_t *chat_hash;
+	switch_hash_t *chat_hash;//user info
 	switch_hash_t *reg_nh_hash;
 	switch_hash_t *mwi_debounce_hash;
 	//switch_core_db_t *master_db;

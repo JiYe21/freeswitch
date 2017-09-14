@@ -2636,7 +2636,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_media_read_frame(switch_core_session
 			switch_goto_status(SWITCH_STATUS_SUCCESS, end);
 		}
 
-
+//读取rtp
 		/* Try to read an RTCP frame, if successful raise an event */
 		if (switch_rtcp_zerocopy_read_frame(engine->rtp_session, &rtcp_frame) == SWITCH_STATUS_SUCCESS) {
 			switch_event_t *event;
@@ -2966,7 +2966,7 @@ SWITCH_DECLARE(switch_status_t) switch_core_media_read_frame(switch_core_session
 				}
 
 				if (engine->tf->text_frame.datalen == 0) {
-					engine->tf->text_frame.data = "� ";
+					engine->tf->text_frame.data = "? ";
 					engine->tf->text_frame.datalen = strlen(engine->tf->text_frame.data);
 				}
 

@@ -667,7 +667,7 @@ SWITCH_DECLARE(switch_status_t) switch_ivr_session_echo(switch_core_session_t *s
 	switch_channel_set_flag(channel, CF_TEXT_ECHO);
 
 	while (switch_channel_ready(channel)) {
-		status = switch_core_session_read_frame(session, &read_frame, SWITCH_IO_FLAG_NONE, 0);
+		status = switch_core_session_read_frame(session, &read_frame, SWITCH_IO_FLAG_NONE, 0);//读取数据(rtp)
 		if (!SWITCH_READ_ACCEPTABLE(status)) {
 			break;
 		}
@@ -709,7 +709,7 @@ SWITCH_DECLARE(switch_status_t) switch_ivr_session_echo(switch_core_session_t *s
 			}
 		}
 
-		switch_core_session_write_frame(session, read_frame, SWITCH_IO_FLAG_NONE, 0);
+		switch_core_session_write_frame(session, read_frame, SWITCH_IO_FLAG_NONE, 0);//将数据发给对方
 
 		if (switch_channel_test_flag(channel, CF_BREAK)) {
 			switch_channel_clear_flag(channel, CF_BREAK);

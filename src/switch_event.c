@@ -716,6 +716,7 @@ SWITCH_DECLARE(switch_status_t) switch_event_init(switch_memory_pool_t *pool)
 	return SWITCH_STATUS_SUCCESS;
 }
 
+//Ìí¼ÓÊÂ¼þ
 SWITCH_DECLARE(switch_status_t) switch_event_create_subclass_detailed(const char *file, const char *func, int line,
 																	  switch_event_t **event, switch_event_types_t event_id, const char *subclass_name)
 {

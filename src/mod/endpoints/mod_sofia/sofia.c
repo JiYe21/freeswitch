@@ -1456,6 +1456,7 @@ static void sofia_handle_sip_r_refer(nua_t *nua, sofia_profile_t *profile, nua_h
 
 
 //sofia_dispatch_event_t *de
+//事件分发
 static void our_sofia_event_callback(nua_event_t event,
 						  int status,
 						  char const *phrase,
@@ -2359,7 +2360,7 @@ void sofia_queue_message(sofia_dispatch_event_t *de)
 
 	if (launch) {
 		if (mod_sofia_globals.msg_queue_len < mod_sofia_globals.max_msg_queues) {
-			sofia_msg_thread_start(mod_sofia_globals.msg_queue_len + 1);
+			sofia_msg_thread_start(mod_sofia_globals.msg_queue_len + 1);//消息出来线程
 		}
 	}
 
@@ -2621,7 +2622,7 @@ void sofia_event_callback(nua_event_t event,
 			goto end;
 		}
 	}
-
+//投递事件
 	sofia_queue_message(de);
 
  end:
@@ -3144,7 +3145,7 @@ void *SWITCH_THREAD_FUNC sofia_profile_thread_run(switch_thread_t *thread, void 
 	if ( (profile->tls_verify_policy & TPTLS_VERIFY_SUBJECTS_IN)  && profile->tls_verify_in_subjects_str && ! profile->tls_verify_in_subjects) {
 		profile->tls_verify_in_subjects = su_strlst_dup_split((su_home_t *)profile->nua, profile->tls_verify_in_subjects_str, "|");
 	}
-
+//启动sofia-sip
 	do {
 		profile->nua = nua_create(profile->s_root,	/* Event loop */
 								  sofia_event_callback,	/* Callback for processing events */
@@ -4397,7 +4398,7 @@ done:
 
 	return status;
 }
-
+//解析autoload_configs/sofia.conf.xml 文件  节点: global_settings  profiles
 switch_status_t config_sofia(sofia_config_t reload, char *profile_name)
 {
 	char *cf = "sofia.conf";
@@ -4482,6 +4483,7 @@ switch_status_t config_sofia(sofia_config_t reload, char *profile_name)
 	}
 
 	if ((profiles = switch_xml_child(cfg, "profiles"))) {
+		//解析具体profile(internal,external,...)
 		for (xprofile = switch_xml_child(profiles, "profile"); xprofile; xprofile = xprofile->next) {
 			char *xprofilename = (char *) switch_xml_attr_soft(xprofile, "name");
 			char *xprofiledomain = (char *) switch_xml_attr(xprofile, "domain");
@@ -6137,7 +6139,7 @@ switch_status_t config_sofia(sofia_config_t reload, char *profile_name)
 					if (profile->sipip) {
 						switch_event_t *s_event;
 						if (!profile->extsipport) profile->extsipport = profile->sip_port;
-
+//启动一个线程处理协议
 						launch_sofia_profile_thread(profile);
 						if (profile->odbc_dsn) {
 							switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_NOTICE, "Connecting ODBC Profile %s [%s]\n", profile->name, url);

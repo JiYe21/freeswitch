@@ -40,11 +40,11 @@
 /*************************************************************************************************************************************************************/
 #include "mod_sofia.h"
 #include "sofia-sip/sip_extra.h"
-
+//函数声明
 SWITCH_MODULE_LOAD_FUNCTION(mod_sofia_load);
 SWITCH_MODULE_SHUTDOWN_FUNCTION(mod_sofia_shutdown);
 //模块定义  加载函数
-SWITCH_MODULE_DEFINITION(mod_sofia, mod_sofia_load, mod_sofia_shutdown, NULL);
+SWITCH_MODULE_DEFINITION(mod_sofia, mod_sofia_load, mod_sofia_shutdown, NULL);//SWITCH_MODULE_DEFINITION_EX  switch_types.h
 
 struct mod_sofia_globals mod_sofia_globals;
 switch_endpoint_interface_t *sofia_endpoint_interface;
@@ -6175,13 +6175,13 @@ SWITCH_MODULE_LOAD_FUNCTION(mod_sofia_load)
 		switch_goto_status(SWITCH_STATUS_GENERR, err);
 		return SWITCH_STATUS_GENERR;
 	}
-
+//加载配置文件
 	if (config_sofia(SOFIA_CONFIG_LOAD, NULL) != SWITCH_STATUS_SUCCESS) {
 		mod_sofia_globals.running = 0;
 		switch_goto_status(SWITCH_STATUS_GENERR, err);
 		return SWITCH_STATUS_GENERR;
 	}
-
+//启动事件处理线程
 	sofia_msg_thread_start(0);
 
 	switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG, "Waiting for profiles to start\n");

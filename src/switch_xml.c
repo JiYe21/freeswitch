@@ -1363,7 +1363,7 @@ static int preprocess(const char *cwd, const char *file, FILE *write_fd, int rle
 		char *bp;
 
 		switch_safe_free(ebuf);
-
+//从freeswitch.xml读取一行
 		if ((cur = switch_fp_read_dline(read_fd, &buf, &len)) <= 0) {
 			break;
 		}
@@ -1580,6 +1580,7 @@ SWITCH_DECLARE(switch_xml_t) switch_xml_parse_file_simple(const char *file)
 	return NULL;
 }
 
+//解析xml文件
 SWITCH_DECLARE(switch_xml_t) switch_xml_parse_file(const char *file)
 {
 	int fd = -1;
@@ -2276,7 +2277,7 @@ SWITCH_DECLARE(switch_xml_t) switch_xml_open_root(uint8_t reload, const char **e
 
 	return root;
 }
-
+//打开freeswitch.xml文件
 SWITCH_DECLARE_NONSTD(switch_xml_t) __switch_xml_open_root(uint8_t reload, const char **err, void *user_data)
 {
 	char path_buf[1024];

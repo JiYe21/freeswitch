@@ -53,7 +53,7 @@ typedef struct switch_codec_node_s {
 	struct switch_codec_node_s *next;
 } switch_codec_node_t;
 
-
+//模块context
 struct switch_loadable_module {
 	char *key;
 	char *filename;
@@ -68,7 +68,7 @@ struct switch_loadable_module {
 	switch_thread_t *thread;
 	switch_bool_t shutting_down;
 };
-
+//模块容器
 struct switch_loadable_module_container {
 	switch_hash_t *module_hash;
 	switch_hash_t *endpoint_hash;
@@ -1420,7 +1420,7 @@ static switch_status_t switch_loadable_module_load_file(char *path, char *filena
 
 	switch_core_new_memory_pool(&pool);
 	*new_module = NULL;
-
+//打开动态库，符号表中查找struct_name
 	struct_name = switch_core_sprintf(pool, "%s_module_interface", filename);
 
 #ifdef WIN32
@@ -1483,7 +1483,7 @@ static switch_status_t switch_loadable_module_load_file(char *path, char *filena
 			err = "Cannot locate symbol 'switch_module_load' please make sure this is a valid module.";
 			break;
 		}
-
+//模块入口
 		status = load_func_ptr(&module_interface, pool);
 
 		if (status != SWITCH_STATUS_SUCCESS && status != SWITCH_STATUS_NOUNLOAD) {
@@ -1523,7 +1523,7 @@ static switch_status_t switch_loadable_module_load_file(char *path, char *filena
 		switch_safe_free(derr);
 		return SWITCH_STATUS_GENERR;
 	}
-
+//初始化模块context
 	module->pool = pool;
 	module->filename = switch_core_strdup(module->pool, path);
 	module->module_interface = module_interface;
@@ -1883,7 +1883,7 @@ SWITCH_DECLARE(switch_status_t) switch_loadable_module_init(switch_bool_t autolo
 	switch_loadable_module_load_module("", "CORE_VPX_MODULE", SWITCH_FALSE, &err);
 #endif
 #endif
-
+//打开 autoload_configs/modules.conf.xml 加载模块
 	if ((xml = switch_xml_open_cfg(cf, &cfg, NULL))) {
 		switch_xml_t mods, ld;
 		if ((mods = switch_xml_child(cfg, "modules"))) {
